@@ -1,0 +1,20 @@
+{{ template "base.html" }}
+
+{{ section #contenu }}
+<main class="container border mt-4 p-4">
+    <h1>Ajouter un Categorie</h1>
+
+    {{ loop #messages as #msg }}
+        {{ #msg |RAW }}
+    {{ endloop }}
+
+    <form action="add_article" method="post">
+        <div class="form-group">
+            <label>Titre</label>
+            <input type="text" name="titre" class="form-control" value="{{ #titre_categorie }}">
+        </div>
+        <input type="hidden" name="token" value="{{ #token }}">
+        <input type="submit" name="ajouter" class="btn btn-primary" value="Ajouter">
+    </form>
+</main>
+{{ endsection }}
