@@ -79,4 +79,50 @@ class Admin extends ControlleurFramework
         }
 
     }
+
+    // Ajouter une Categorie
+    public static function ajouterCategorie() : void
+    {
+        self::verifAdmin();
+
+        // Formulaire: ajout d'article
+        if (isset($_POST['ajouter']) && User::verifToken($_POST['token'] ?? '')) {
+            $ajout = Categorie::ajouter($_POST['titre']);
+
+            // Si ajouté, vider le formulaire
+            if ($ajout) {
+                unset($_POST);
+            }
+        }
+
+        self::set('titre_HTML', 'Ajouter une Categorie');
+
+        // Pré-remplissage du formulaire
+        self::set('titre_categorie', $_POST['titre'] ?? '');
+
+        $manager = new UserManager();
+        self::set('token', $manager->get('token'));
+
+        self::render('admin/ajouter_categorie.html');
+    }
+
+    public static function supprimerCategorie(int $id_categorie)
+    {
+        self::verifAdmin();
+
+        try {
+            $article = new Article($id_article);
+
+            $article->supprimer();
+
+            header("Location: dashboard");
+
+        } catch (\Exception $e) {
+            Messager::message(Messager::MSG_WARNING, $e->getMessage());
+            self::set('titre_HTML', 'Erreur');
+            self::render('erreur.html');
+        }
+
+    }
+
 }
