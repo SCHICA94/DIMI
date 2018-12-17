@@ -35,6 +35,16 @@ class Admin extends ControlleurFramework
         self::render('admin/liste_articles.html');
     }
 
+    // Accueil - liste des Categorie
+    public static function listeCategorie() : void
+    {
+        self::verifAdmin();
+        self::set('titre_HTML', 'Liste des articles');
+        self::set('liste', Categorie::liste());
+
+        self::render('admin/listeCategorie.html');
+    }
+
     // Ajouter un article
     public static function ajouterArticle() : void
     {
