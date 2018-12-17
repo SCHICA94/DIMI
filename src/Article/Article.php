@@ -31,6 +31,9 @@ class Article
         $this->contenu          = $article['contenu'];
     }
 
+
+    // --------------------------------------------------------------------
+    // Getters
     public function getId() : int
     {
         return $this->id;
@@ -50,19 +53,69 @@ class Article
     {
         return $this->contenu;
     }
+    // --------------------------------------------------------------------
 
+    // Date au format Français
     public function dateFr() : string
     {
         return (new \DateTime($this->date_publication))->format('d/m/Y');
     }
 
+    // Convertir le contenu en MarkDown de l'article en HTML
     public function markdownToHtml() : string
     {
         $parsedown = new \Parsedown();
         return $parsedown->text($this->contenu);
     }
 
-    public function supprimer()
+
+    /**
+     * Modifier l'article
+     *
+     * @param string $titre     titre de l'article
+     * @param string $contenu   contenu de l'article
+     *
+     * @return void
+     */
+    public function modifier(string $titre, string $contenu) : void
+    {
+        // Validation de données
+        if (!self::validation($titre, $contenu)) {
+            return;
+        }
+
+        // Modification en BDD
+        $edit = App::$db->prepare(
+            'UPDATE article SET
+                titre   = :titre,
+                contenu = :contenu
+            WHERE id = :id'
+        );
+        $requete = $edit->execute([
+            'titre'   => trim($titre),
+            'contenu' => trim($contenu),
+            'id'      => $this->id
+        ]);
+
+        // Si la requete SQL ne s'est pas éxécutée correctement
+        if (!$requete) {
+            Messager::message(Messager::MSG_WARNING, 'Impossible de modifier l\'article');
+            return;
+        }
+
+        // Si tout est bon, on met à jour les propriétés
+        $this->titre   = $titre;
+        $this->contenu = $contenu;
+        Messager::message(MSG_SUCCESS, 'Article modifié !');
+    }
+
+
+    /**
+     * Supprimer l'article
+     *
+     * @return void
+     */
+    public function supprimer() : void
     {
         $supp = App::$db->prepare('DELETE FROM article WHERE id = :id');
         $supp->bindParam(':id', $this->id, \PDO::PARAM_INT);
@@ -75,6 +128,8 @@ class Article
         Messager::message(Messager::MSG_SUCCESS, 'Article supprimé');
     }
 
+
+
     /**
      * Validation des données (ajout / modification)
      *
@@ -85,10 +140,13 @@ class Article
      */
     private static function validation(string $titre, string $contenu) : bool
     {
+        // Tableau des erreurs
         $erreurs = [
             'titre vide'   => empty(trim($titre)),
             'contenu vide' => empty(trim($contenu))
         ];
+
+        // Si une erreur est trouvée -> message
         if (in_array(true, $erreurs)) {
             Messager::message(Messager::MSG_WARNING, array_search(true, $erreurs));
             return false;
@@ -96,6 +154,8 @@ class Article
 
         return true;
     }
+
+
 
     /**
      * Ajouter un article
@@ -142,6 +202,8 @@ class Article
 
     /**
      * Obtenir une liste d'articles
+     *
+     * @return array la liste des articles
      */
     public static function liste() : array
     {

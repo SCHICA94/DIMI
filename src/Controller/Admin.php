@@ -62,6 +62,40 @@ class Admin extends ControlleurFramework
         self::render('admin/ajouter_article.html');
     }
 
+    public static function modifierArticle(int $id_article)
+    {
+        // Verification des droits d'accès
+        self::verifAdmin();
+
+        try {
+            $article = new Article($id_article);
+
+            // Modification
+            if (isset($_POST['modifier']) && User::verifToken($_POST['token'] ?? '')) {
+                $article->modifier($_POST['titre'], $_POST['contenu']);
+            }
+
+            // Variables de template
+            self::set('article', [
+                'id'      => $article->getId(),
+                'titre'   => $article->getTitre(),
+                'contenu' => $article->getContenu()
+            ]);
+
+            $manager = new UserManager();
+            self::set('token', $manager->get('token'));
+            self::set('titre_HTML', 'Modifier un article');
+
+            // Rendu du template
+            self::render('admin/modifier_article.html');
+
+        } catch (\Exception $e) {
+            Messager::message(Messager::MSG_WARNING, $e->getMessage());
+            self::set('titre_HTML', 'Erreur');
+            self::render('admin/erreur.html');
+        }
+    }
+
     public static function supprimerArticle(int $id_article)
     {
         self::verifAdmin();
@@ -76,19 +110,18 @@ class Admin extends ControlleurFramework
         } catch (\Exception $e) {
             Messager::message(Messager::MSG_WARNING, $e->getMessage());
             self::set('titre_HTML', 'Erreur');
-            self::render('erreur.html');
+            self::render('admin/erreur.html');
         }
 
     }
-
-    // Ajouter une Categorie
+    // Ajouter un article
     public static function ajouterCategorie() : void
     {
         self::verifAdmin();
 
         // Formulaire: ajout d'article
-        if (isset($_POST['ajouter']) && User::verifToken($_POST['token'] ?? '')) {
-            $ajout = Categorie::ajouter($_POST['titre']);
+        if (isset($_POST['ajouterCategorie']) && User::verifToken($_POST['token'] ?? '')) {
+            $ajout = Categorie::ajouter($_POST['titre_categorie']);
 
             // Si ajouté, vider le formulaire
             if ($ajout) {
@@ -96,7 +129,7 @@ class Admin extends ControlleurFramework
             }
         }
 
-        self::set('titre_HTML', 'Ajouter une Categorie');
+        self::set('titre_HTML', 'Ajouter un categorie');
 
         // Pré-remplissage du formulaire
         self::set('titre_categorie', $_POST['titre'] ?? '');
@@ -107,7 +140,41 @@ class Admin extends ControlleurFramework
         self::render('admin/ajouter_categorie.html');
     }
 
-    public static function supprimerCategorie(int $id_categorie)
+    public static function modifierCategorie(int $id_article)
+    {
+        // Verification des droits d'accès
+        self::verifAdmin();
+
+        try {
+            $article = new Article($id_article);
+
+            // Modification
+            if (isset($_POST['modifier']) && User::verifToken($_POST['token'] ?? '')) {
+                $article->modifier($_POST['titre'], $_POST['contenu']);
+            }
+
+            // Variables de template
+            self::set('article', [
+                'id'      => $article->getId(),
+                'titre'   => $article->getTitre(),
+                'contenu' => $article->getContenu()
+            ]);
+
+            $manager = new UserManager();
+            self::set('token', $manager->get('token'));
+            self::set('titre_HTML', 'Modifier un article');
+
+            // Rendu du template
+            self::render('admin/modifier_article.html');
+
+        } catch (\Exception $e) {
+            Messager::message(Messager::MSG_WARNING, $e->getMessage());
+            self::set('titre_HTML', 'Erreur');
+            self::render('admin/erreur.html');
+        }
+    }
+
+    public static function supprimerCategorie(int $id_article)
     {
         self::verifAdmin();
 
@@ -121,9 +188,8 @@ class Admin extends ControlleurFramework
         } catch (\Exception $e) {
             Messager::message(Messager::MSG_WARNING, $e->getMessage());
             self::set('titre_HTML', 'Erreur');
-            self::render('erreur.html');
+            self::render('admin/erreur.html');
         }
 
     }
-
 }

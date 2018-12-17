@@ -29,6 +29,7 @@ new Router(
             '/add_article'  => [PageBack::class, 'ajouterArticle'],
             'R>/edit-(\d+)' => [PageBack::class, 'modifierArticle'],
             'R>/supp-(\d+)' => [PageBack::class, 'supprimerArticle'],
+            '/listeCategorie'  => [PageBack::class, 'ListeCategorie'],
             '/add_categorie'  => [PageBack::class, 'ajouterCategorie'],
         ]
     ],
