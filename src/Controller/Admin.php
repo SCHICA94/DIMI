@@ -7,6 +7,7 @@ use Phunder\Core\Messager;
 use Phunder\Core\User\UserManager;
 use User\User;
 use Article\Article;
+use Article\Categorie;
 
 class Admin extends ControlleurFramework
 {

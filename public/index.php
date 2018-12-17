@@ -23,13 +23,20 @@ new Router(
         'R>(?:/|/home)?'   => [PageFront::class, 'index'],        // "R>" pour utiliser une RegEx
         '/login'           => [PageFront::class, 'connexion'],
         '/logout'          => [PageFront::class, 'deconnexion'],
-        'R>/article-(\d+)' => [PageFront::class, 'lireArticle'],
+        'R>/Categorie-(\d+)' => [PageFront::class, 'lireCategorie'],
         '/admin'           => [
+<<<<<<< HEAD
             '/dashboard'    => [PageBack::class, 'listeArticles'],
             '/add_article'  => [PageBack::class, 'ajouterArticle'],
             'R>/edit-(\d+)' => [PageBack::class, 'modifierArticle'],
             'R>/supp-(\d+)' => [PageBack::class, 'supprimerArticle'],
             '/listeCategorie' => [PageBack::class, 'listeCategorie'],
+=======
+            '/dashboard'    => [PageBack::class, 'listeCategorie'],
+            '/add_Categorie'  => [PageBack::class, 'ajouterCategorie'],
+            'R>/edit-(\d+)' => [PageBack::class, 'modifierCategorie'],
+            'R>/supp-(\d+)' => [PageBack::class, 'supprimerCategorie'],
+>>>>>>> dc23978e303b7bdf75ecb9f2320e9cc5d64a3f63
             '/add_categorie'  => [PageBack::class, 'ajouterCategorie'],
 
         ]
