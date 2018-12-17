@@ -19,26 +19,21 @@ class Categorie
   public static function ajouter(string $titre) : bool
   {
       // Validation de données
-      if (!self::validation($titre, $contenu)) {
+      if (!self::validation($titre)) {
           return false;
       }
 
       // Insertion en base de données
       $insert = App::$db->prepare(
           'INSERT INTO categorie (
-              titre,
-              date_publication,
-              contenu
+              titre
           ) VALUES (
-              :titre,
-              NOW(),
-              :contenu
+              :titre
           )'
       );
       // execution
       $resultat = $insert->execute([
-          'titre'   => $titre,
-          'contenu' => $contenu
+          'titre'   => $titre
       ]);
 
       if (!$resultat) {
@@ -47,6 +42,20 @@ class Categorie
       }
 
       Messager::message(Messager::MSG_SUCCESS, 'Article ajouté');
+      return true;
+  }
+
+
+  private static function validation(string $titre) : bool
+  {
+      $erreurs = [
+          'titre vide'   => empty(trim($titre))
+      ];
+      if (in_array(true, $erreurs)) {
+          Messager::message(Messager::MSG_WARNING, array_search(true, $erreurs));
+          return false;
+      }
+
       return true;
   }
 }

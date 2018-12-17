@@ -23,7 +23,7 @@ new Router(
         'R>(?:/|/home)?'   => [PageFront::class, 'index'],        // "R>" pour utiliser une RegEx
         '/login'           => [PageFront::class, 'connexion'],
         '/logout'          => [PageFront::class, 'deconnexion'],
-        'R>/Categorie-(\d+)' => [PageFront::class, 'lireCategorie'],
+        'R>/article-(\d+)' => [PageFront::class, 'lireArticle'],
         '/admin'           => [
             '/dashboard'    => [PageBack::class, 'listeArticles'],
             '/add_article'  => [PageBack::class, 'ajouterArticle'],
@@ -31,7 +31,6 @@ new Router(
             'R>/supp-(\d+)' => [PageBack::class, 'supprimerArticle'],
             '/listeCategorie' => [PageBack::class, 'listeCategorie'],
             '/add_categorie'  => [PageBack::class, 'ajouterCategorie'],
-
         ]
     ],
     [PageFront::class, 'page_404']

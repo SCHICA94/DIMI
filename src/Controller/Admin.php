@@ -130,8 +130,8 @@ class Admin extends ControlleurFramework
         self::verifAdmin();
 
         // Formulaire: ajout d'article
-        if (isset($_POST['ajouterCategorie']) && User::verifToken($_POST['token'] ?? '')) {
-            $ajout = Categorie::ajouter($_POST['titre_categorie']);
+        if (isset($_POST['ajouter']) && User::verifToken($_POST['token'] ?? '')) {
+            $ajout = Categorie::ajouter($_POST['titre']);
 
             // Si ajouté, vider le formulaire
             if ($ajout) {
