@@ -19,7 +19,7 @@ class Categorie
   public static function ajouter(string $titre) : bool
   {
       // Validation de données
-      if (!self::validation($titre, $contenu)) {
+      if (!self::validation($titre)) {
           return false;
       }
 
@@ -38,7 +38,6 @@ class Categorie
       // execution
       $resultat = $insert->execute([
           'titre'   => $titre,
-          'contenu' => $contenu
       ]);
 
       if (!$resultat) {
@@ -47,6 +46,20 @@ class Categorie
       }
 
       Messager::message(Messager::MSG_SUCCESS, 'Article ajouté');
+      return true;
+  }
+
+
+  private static function validation(string $titre) : bool
+  {
+      $erreurs = [
+          'titre vide'   => empty(trim($titre))
+      ];
+      if (in_array(true, $erreurs)) {
+          Messager::message(Messager::MSG_WARNING, array_search(true, $erreurs));
+          return false;
+      }
+
       return true;
   }
 }
